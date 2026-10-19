@@ -1,0 +1,20 @@
+{"timestamp": "2026-09-30T02:15:05Z", "device_id": "CAM-A-SERVERROOM-01", "device_type": "camera", "area": "A-ServerRoom", "building": "A", "status": "offline", "reason": "connection lost", "ref": "DEV-00001"}
+{"timestamp": "2026-09-30T02:51:30Z", "device_id": "CAM-A-SERVERROOM-01", "device_type": "camera", "area": "A-ServerRoom", "building": "A", "status": "online", "reason": "reconnected", "ref": "DEV-00002"}
+{"timestamp": "2026-09-30T03:12:00Z", "device_id": "CAM-B-WAREHOUSE-01", "device_type": "camera", "area": "B-Warehouse", "building": "B", "status": "offline", "reason": "connection lost", "ref": "DEV-00003"}
+{"timestamp": "2026-09-30T03:16:00Z", "device_id": "CAM-B-WAREHOUSE-01", "device_type": "camera", "area": "B-Warehouse", "building": "B", "status": "online", "reason": "reconnected", "ref": "DEV-00004"}
+{"timestamp": "2026-09-30T07:45:00Z", "device_id": "CAM-B-WAREHOUSE-01", "device_type": "camera", "area": "B-Warehouse", "building": "B", "status": "offline", "reason": "connection lost", "ref": "DEV-00005"}
+{"timestamp": "2026-09-30T07:46:00Z", "device_id": "CAM-B-WAREHOUSE-01", "device_type": "camera", "area": "B-Warehouse", "building": "B", "status": "online", "reason": "reconnected", "ref": "DEV-00006"}
+{"timestamp": "2026-09-30T11:02:00Z", "device_id": "CAM-B-WAREHOUSE-01", "device_type": "camera", "area": "B-Warehouse", "building": "B", "status": "offline", "reason": "connection lost", "ref": "DEV-00007"}
+{"timestamp": "2026-09-30T11:03:00Z", "device_id": "CAM-B-WAREHOUSE-01", "device_type": "camera", "area": "B-Warehouse", "building": "B", "status": "online", "reason": "reconnected", "ref": "DEV-00008"}
+{"timestamp": "2026-09-30T13:37:00Z", "device_id": "CAM-B-WAREHOUSE-01", "device_type": "camera", "area": "B-Warehouse", "building": "B", "status": "offline", "reason": "connection lost", "ref": "DEV-00009"}
+{"timestamp": "2026-09-30T13:39:00Z", "device_id": "CAM-B-WAREHOUSE-01", "device_type": "camera", "area": "B-Warehouse", "building": "B", "status": "online", "reason": "reconnected", "ref": "DEV-00010"}
+{"timestamp": "2026-09-30T14:00:00Z", "device_id": "DOOR-B-LAB-01", "device_type": "door_controller", "area": "B-Lab", "building": "B", "status": "offline", "reason": "scheduled maintenance (CHG-2231)", "ref": "DEV-00011"}
+{"timestamp": "2026-09-30T14:22:00Z", "device_id": "DOOR-B-LAB-01", "device_type": "door_controller", "area": "B-Lab", "building": "B", "status": "online", "reason": "maintenance complete (CHG-2231)", "ref": "DEV-00012"}
+{"timestamp": "2026-09-30T18:20:00Z", "device_id": "CAM-B-WAREHOUSE-01", "device_type": "camera", "area": "B-Warehouse", "building": "B", "status": "offline", "reason": "connection lost", "ref": "DEV-00013"}
+{"timestamp": "2026-09-30T18:22:00Z", "device_id": "CAM-B-WAREHOUSE-01", "device_type": "camera", "area": "B-Warehouse", "building": "B", "status": "online", "reason": "reconnected", "ref": "DEV-00014"}
+{"timestamp": "2026-09-30T22:05:00Z", "device_id": "CAM-B-WAREHOUSE-01", "device_type": "camera", "area": "B-Warehouse", "building": "B", "status": "offline", "reason": "connection lost", "ref": "DEV-00015"}
+{"timestamp": "2026-09-30T22:08:00Z", "device_id": "CAM-B-WAREHOUSE-01", "device_type": "camera", "area": "B-Warehouse", "building": "B", "status": "online", "reason": "reconnected", "ref": "DEV-00016"}
+{"timestamp": "2026-10-01T02:47:10Z", "device_id": "CAM-B-WAREHOUSE-01", "device_type": "camera", "area": "B-Warehouse", "building": "B", "status": "offline", "reason": "connection lost", "ref": "DEV-00017"}
+{"timestamp": "2026-10-01T02:50:30Z", "device_id": "CAM-B-WAREHOUSE-01", "device_type": "camera", "area": "B-Warehouse", "building": "B", "status": "online", "reason": "reconnected", "ref": "DEV-00018"}
+{"timestamp": "2026-10-01T14:20:05Z", "device_id": "CAM-A-LOBBY-01", "device_type": "camera", "area": "A-Lobby", "building": "A", "status": "offline", "reason": "connection lost", "ref": "DEV-00019"}
+{"timestamp": "2026-10-01T14:23:40Z", "device_id": "CAM-A-LOBBY-01", "device_type": "camera", "area": "A-Lobby", "building": "A", "status": "online", "reason": "reconnected", "ref": "DEV-00020"}

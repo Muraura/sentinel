@@ -1,0 +1,14 @@
+pydantic==2.13.5
+sqlalchemy==2.1.2
+psycopg[binary]==3.3.6
+python-dotenv==1.2.4
+anthropic==1.11.0
+ollama==0.6.3
+fastapi==0.143.0
+uvicorn[standard]==0.54.0
+mcp==2.3.0
+qdrant-client==1.19.1
+fastembed==0.9.0
+# tests
+pytest==9.1.1
+httpx==0.28.1

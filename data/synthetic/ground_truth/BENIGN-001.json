@@ -1,0 +1,83 @@
+{
+  "id": "BENIGN-001",
+  "title": "A quiet night: unusual but innocent activity only",
+  "window": {
+    "start": "2026-10-01T00:00:00Z",
+    "end": "2026-10-01T06:00:00Z"
+  },
+  "example_questions": [
+    "Was there any suspicious activity overnight on 2026-10-01, between 00:00 and 06:00?",
+    "Review authentication and badge activity between 00:00 and 06:00 on 2026-10-01. Anything to escalate?"
+  ],
+  "expected": {
+    "severity": [
+      "NONE",
+      "LOW",
+      "INFORMATIONAL"
+    ],
+    "timeline": [],
+    "key_findings": [
+      {
+        "name": "checks the late-night lab access",
+        "text_any": [
+          "e.diallo"
+        ]
+      },
+      {
+        "name": "treats the password spraying as background noise",
+        "text_any": [
+          "noise",
+          "background",
+          "spray",
+          "unknown_user",
+          "non-existent",
+          "nonexistent",
+          "do not exist",
+          "don't exist"
+        ]
+      }
+    ],
+    "facts": [
+      "e.diallo (Engineering) entered B-Lab at 01:11, permitted, logged in with MFA from an internal IP",
+      "unknown_user failures from 198.51.100.0/24",
+      "night-shift patrols"
+    ]
+  },
+  "decoys": [
+    {
+      "refs": [
+        "ACC-00155",
+        "ACC-00156"
+      ],
+      "entities": [
+        "e.diallo"
+      ],
+      "why_benign": "Permitted area, internal IP, MFA, normal API use: working late, not an intrusion"
+    },
+    {
+      "refs": [
+        "DEV-00017"
+      ],
+      "entities": [
+        "CAM-B-WAREHOUSE-01"
+      ],
+      "why_benign": "Known flaky camera"
+    },
+    {
+      "refs": [],
+      "entities": [
+        "198.51.100.",
+        "unknown_user"
+      ],
+      "why_benign": "Background password spraying against accounts that don't exist"
+    },
+    {
+      "refs": [],
+      "entities": [
+        "s.otieno",
+        "r.haddad"
+      ],
+      "why_benign": "Night-shift security patrols"
+    }
+  ]
+}

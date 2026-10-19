@@ -1,0 +1,150 @@
+{
+  "id": "INC-002",
+  "title": "API 504s caused by database connection exhaustion from a manually started re-indexing job",
+  "window": {
+    "start": "2026-10-01T13:30:00Z",
+    "end": "2026-10-01T15:00:00Z"
+  },
+  "example_questions": [
+    "Why were users getting 504 errors on 2026-10-01 around 14:20?",
+    "What happened to the portal API between 14:00 and 15:00 on 2026-10-01?",
+    "Was the database involved in the errors on the afternoon of 2026-10-01?"
+  ],
+  "expected": {
+    "severity": [
+      "MEDIUM",
+      "HIGH"
+    ],
+    "timeline": [
+      {
+        "time": "14:05",
+        "refs": [],
+        "markers": [
+          "re-index",
+          "reindex"
+        ],
+        "what": "Worker starts a profile re-indexing job (triggered manually)"
+      },
+      {
+        "time": "14:09-14:15",
+        "refs": [],
+        "markers": [
+          "connection count",
+          "connections"
+        ],
+        "what": "Postgres connections climb from 34 to 97 of 100"
+      },
+      {
+        "time": "14:16",
+        "refs": [],
+        "markers": [
+          "QueuePool",
+          "too many clients",
+          "pool"
+        ],
+        "what": "API connection pool exhausted; Postgres refuses new clients"
+      },
+      {
+        "time": "14:18-14:31",
+        "refs": [],
+        "markers": [
+          "504"
+        ],
+        "what": "API returns 504 Gateway Timeout"
+      },
+      {
+        "time": "14:31",
+        "refs": [],
+        "markers": [
+          "finished",
+          "recover"
+        ],
+        "what": "Job finishes, connections drop to 31, errors stop"
+      }
+    ],
+    "key_findings": [
+      {
+        "name": "identifies the 504 errors",
+        "text_any": [
+          "504"
+        ]
+      },
+      {
+        "name": "identifies database connection exhaustion",
+        "text_any": [
+          "too many clients",
+          "connection pool",
+          "QueuePool",
+          "pool limit",
+          "connection exhaustion",
+          "connections exhausted",
+          "max connections",
+          "connection limit",
+          "of max 100"
+        ]
+      },
+      {
+        "name": "links it to the re-indexing job",
+        "text_any": [
+          "re-index",
+          "reindex"
+        ]
+      },
+      {
+        "name": "dates the start around 14:16-14:18",
+        "text_any": [
+          "14:16",
+          "14:17",
+          "14:18"
+        ]
+      },
+      {
+        "name": "notes recovery when the job finished",
+        "text_any": [
+          "14:31",
+          "14:32",
+          "recovered",
+          "recovery"
+        ]
+      }
+    ],
+    "facts": [
+      "504s on /api/v1/devices from 14:18 to 14:31",
+      "API connection pool timeouts from 14:16:30; Postgres 'too many clients' from 14:16:45",
+      "Postgres connections 34 -> 97 of 100 between 14:00 and 14:15:40, back to 31 at 14:31:40",
+      "Re-indexing job ran 14:05 -> 14:31:10"
+    ],
+    "inferences": [
+      "The re-indexing job held database connections, starving the API (timing, not proof)"
+    ],
+    "missing_evidence": [
+      "Per-client connection breakdown in Postgres",
+      "Who started the job and why"
+    ],
+    "recommended_actions": [
+      "Run re-indexing off-peak or with a connection limit",
+      "Alert on connection usage > 80%"
+    ]
+  },
+  "decoys": [
+    {
+      "refs": [],
+      "entities": [
+        "metrics-agent",
+        "push metrics",
+        "metrics-store",
+        "context deadline"
+      ],
+      "why_benign": "The metrics agent's push timeouts happen all afternoon, before and after the incident"
+    },
+    {
+      "refs": [
+        "DEV-00019"
+      ],
+      "entities": [
+        "CAM-A-LOBBY-01"
+      ],
+      "why_benign": "The lobby camera dropped for 3 minutes at 14:20: coincidence, unrelated to the API"
+    }
+  ]
+}

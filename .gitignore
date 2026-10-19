@@ -1,0 +1,15 @@
+# Local log exports
+logs/
+data/synthetic/platform_logs.json
+# Separate side projects
+Customer/
+pr_reviewer/
+.env
+.venv/
+__pycache__/
+.pytest_cache/
+.DS_Store
+traces/
+evals/results/
+# Generated locally: python scripts/generate_sample_logs.py
+data/sample/

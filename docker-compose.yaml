@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: sentinel-postgres
+    env_file: .env
+    ports:
+      - "5433:5432"  # 5432 is taken by the local Postgres on this machine
+    volumes:
+      - sentinel-pgdata:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro  # runs once, on first start
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      retries: 10
+
+volumes:
+  sentinel-pgdata:

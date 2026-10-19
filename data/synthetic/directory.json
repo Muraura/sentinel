@@ -1,0 +1,666 @@
+{
+  "users": [
+    {
+      "user_name": "l.ortiz",
+      "full_name": "Lucia Ortiz",
+      "department": "Finance",
+      "badge_id": "BDG-1001",
+      "groups": [
+        "finance",
+        "legacy-all-access"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "A-Finance"
+      ],
+      "shift": "day",
+      "mfa_enrolled": false
+    },
+    {
+      "user_name": "a.khan",
+      "full_name": "Asha Khan",
+      "department": "Engineering",
+      "badge_id": "BDG-1002",
+      "groups": [
+        "engineering"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "s.otieno",
+      "full_name": "Samuel Otieno",
+      "department": "Security",
+      "badge_id": "BDG-1003",
+      "groups": [
+        "security"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "A-Finance",
+        "A-ServerRoom",
+        "B-Lobby",
+        "B-Lab",
+        "B-Warehouse"
+      ],
+      "shift": "night",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "r.haddad",
+      "full_name": "Rania Haddad",
+      "department": "Security",
+      "badge_id": "BDG-1004",
+      "groups": [
+        "security"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "A-Finance",
+        "A-ServerRoom",
+        "B-Lobby",
+        "B-Lab",
+        "B-Warehouse"
+      ],
+      "shift": "night",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "d.abara",
+      "full_name": "Dalia Abara",
+      "department": "Security",
+      "badge_id": "BDG-1005",
+      "groups": [
+        "security"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "A-Finance",
+        "A-ServerRoom",
+        "B-Lobby",
+        "B-Lab",
+        "B-Warehouse"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "i.horvat",
+      "full_name": "Ines Horvat",
+      "department": "Security",
+      "badge_id": "BDG-1006",
+      "groups": [
+        "security"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "A-Finance",
+        "A-ServerRoom",
+        "B-Lobby",
+        "B-Lab",
+        "B-Warehouse"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "e.diallo",
+      "full_name": "Elif Diallo",
+      "department": "Engineering",
+      "badge_id": "BDG-1007",
+      "groups": [
+        "engineering"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "y.santos",
+      "full_name": "Yusuf Santos",
+      "department": "Security",
+      "badge_id": "BDG-1008",
+      "groups": [
+        "security"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "A-Finance",
+        "A-ServerRoom",
+        "B-Lobby",
+        "B-Lab",
+        "B-Warehouse"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "s.nakamura",
+      "full_name": "Samir Nakamura",
+      "department": "Engineering",
+      "badge_id": "BDG-1009",
+      "groups": [
+        "engineering"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "a.costa",
+      "full_name": "Amina Costa",
+      "department": "Engineering",
+      "badge_id": "BDG-1010",
+      "groups": [
+        "engineering"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "h.rahman",
+      "full_name": "Hassan Rahman",
+      "department": "Engineering",
+      "badge_id": "BDG-1011",
+      "groups": [
+        "engineering"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "a.santos",
+      "full_name": "Amina Santos",
+      "department": "Facilities",
+      "badge_id": "BDG-1012",
+      "groups": [
+        "facilities"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Warehouse",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "w.santos",
+      "full_name": "Wanjiru Santos",
+      "department": "Engineering",
+      "badge_id": "BDG-1013",
+      "groups": [
+        "engineering"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "h.osei",
+      "full_name": "Hassan Osei",
+      "department": "IT",
+      "badge_id": "BDG-1014",
+      "groups": [
+        "it"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "A-ServerRoom"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "i.abara",
+      "full_name": "Ines Abara",
+      "department": "Facilities",
+      "badge_id": "BDG-1015",
+      "groups": [
+        "facilities"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Warehouse",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "w.nakamura",
+      "full_name": "Wanjiru Nakamura",
+      "department": "Engineering",
+      "badge_id": "BDG-1016",
+      "groups": [
+        "engineering"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "i.eriksen",
+      "full_name": "Ines Eriksen",
+      "department": "Finance",
+      "badge_id": "BDG-1017",
+      "groups": [
+        "finance"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "A-Finance"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "k.diallo",
+      "full_name": "Kofi Diallo",
+      "department": "Engineering",
+      "badge_id": "BDG-1018",
+      "groups": [
+        "engineering"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "m.diallo",
+      "full_name": "Mateo Diallo",
+      "department": "Engineering",
+      "badge_id": "BDG-1019",
+      "groups": [
+        "engineering"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "l.varga",
+      "full_name": "Lena Varga",
+      "department": "Finance",
+      "badge_id": "BDG-1020",
+      "groups": [
+        "finance"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "A-Finance"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "b.osei",
+      "full_name": "Brian Osei",
+      "department": "Finance",
+      "badge_id": "BDG-1021",
+      "groups": [
+        "finance"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "A-Finance"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "d.moreau",
+      "full_name": "Dalia Moreau",
+      "department": "Facilities",
+      "badge_id": "BDG-1022",
+      "groups": [
+        "facilities"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Warehouse",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "r.jensen",
+      "full_name": "Rosa Jensen",
+      "department": "Engineering",
+      "badge_id": "BDG-1023",
+      "groups": [
+        "engineering"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "t.lindqvist",
+      "full_name": "Tariq Lindqvist",
+      "department": "Security",
+      "badge_id": "BDG-1024",
+      "groups": [
+        "security"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "A-Finance",
+        "A-ServerRoom",
+        "B-Lobby",
+        "B-Lab",
+        "B-Warehouse"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "g.costa",
+      "full_name": "Grace Costa",
+      "department": "Facilities",
+      "badge_id": "BDG-1025",
+      "groups": [
+        "facilities"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Warehouse",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "v.horvat",
+      "full_name": "Victor Horvat",
+      "department": "Engineering",
+      "badge_id": "BDG-1026",
+      "groups": [
+        "engineering"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "c.horvat",
+      "full_name": "Chen Horvat",
+      "department": "Finance",
+      "badge_id": "BDG-1027",
+      "groups": [
+        "finance"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "A-Finance"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "m.ivanova",
+      "full_name": "Mateo Ivanova",
+      "department": "Engineering",
+      "badge_id": "BDG-1028",
+      "groups": [
+        "engineering"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "u.lindqvist",
+      "full_name": "Uma Lindqvist",
+      "department": "IT",
+      "badge_id": "BDG-1029",
+      "groups": [
+        "it"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "A-ServerRoom"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "l.lindqvist",
+      "full_name": "Lena Lindqvist",
+      "department": "Engineering",
+      "badge_id": "BDG-1030",
+      "groups": [
+        "engineering"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "v.ivanova",
+      "full_name": "Victor Ivanova",
+      "department": "Engineering",
+      "badge_id": "BDG-1031",
+      "groups": [
+        "engineering"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "B-Lobby",
+        "B-Lab"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    },
+    {
+      "user_name": "v.costa",
+      "full_name": "Victor Costa",
+      "department": "Security",
+      "badge_id": "BDG-1032",
+      "groups": [
+        "security"
+      ],
+      "allowed_areas": [
+        "A-Lobby",
+        "A-Office",
+        "A-Finance",
+        "A-ServerRoom",
+        "B-Lobby",
+        "B-Lab",
+        "B-Warehouse"
+      ],
+      "shift": "day",
+      "mfa_enrolled": true
+    }
+  ],
+  "areas": [
+    {
+      "area": "A-Lobby",
+      "building": "A",
+      "restricted": false
+    },
+    {
+      "area": "A-Office",
+      "building": "A",
+      "restricted": false
+    },
+    {
+      "area": "A-Finance",
+      "building": "A",
+      "restricted": true
+    },
+    {
+      "area": "A-ServerRoom",
+      "building": "A",
+      "restricted": true
+    },
+    {
+      "area": "B-Lobby",
+      "building": "B",
+      "restricted": false
+    },
+    {
+      "area": "B-Lab",
+      "building": "B",
+      "restricted": true
+    },
+    {
+      "area": "B-Warehouse",
+      "building": "B",
+      "restricted": false
+    }
+  ],
+  "devices": [
+    {
+      "device_id": "CAM-A-LOBBY-01",
+      "device_type": "camera",
+      "area": "A-Lobby",
+      "building": "A"
+    },
+    {
+      "device_id": "CAM-A-OFFICE-01",
+      "device_type": "camera",
+      "area": "A-Office",
+      "building": "A"
+    },
+    {
+      "device_id": "CAM-A-FINANCE-01",
+      "device_type": "camera",
+      "area": "A-Finance",
+      "building": "A"
+    },
+    {
+      "device_id": "CAM-A-SERVERROOM-01",
+      "device_type": "camera",
+      "area": "A-ServerRoom",
+      "building": "A"
+    },
+    {
+      "device_id": "CAM-B-LOBBY-01",
+      "device_type": "camera",
+      "area": "B-Lobby",
+      "building": "B"
+    },
+    {
+      "device_id": "CAM-B-LAB-01",
+      "device_type": "camera",
+      "area": "B-Lab",
+      "building": "B"
+    },
+    {
+      "device_id": "CAM-B-WAREHOUSE-01",
+      "device_type": "camera",
+      "area": "B-Warehouse",
+      "building": "B"
+    },
+    {
+      "device_id": "DOOR-A-FINANCE-01",
+      "device_type": "door_controller",
+      "area": "A-Finance",
+      "building": "A"
+    },
+    {
+      "device_id": "DOOR-A-SERVERROOM-01",
+      "device_type": "door_controller",
+      "area": "A-ServerRoom",
+      "building": "A"
+    },
+    {
+      "device_id": "DOOR-B-LAB-01",
+      "device_type": "door_controller",
+      "area": "B-Lab",
+      "building": "B"
+    }
+  ]
+}

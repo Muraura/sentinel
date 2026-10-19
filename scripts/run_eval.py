@@ -26,7 +26,7 @@ ALL_SCENARIOS = sorted(p.stem for p in GROUND_TRUTH_DIR.glob("*.json"))
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--scenario", nargs="+", default=ALL_SCENARIOS, choices=ALL_SCENARIOS)
-parser.add_argument("--provider", choices=["claude", "ollama", "huggingface"], required=True)
+parser.add_argument("--provider", choices=["claude", "ollama", "huggingface", "gemini"], required=True)
 parser.add_argument("--runs", type=int, default=1, help="repeat each question to measure consistency")
 parser.add_argument("--effort", default="medium", help="Claude only")
 parser.add_argument("--label", default="", help="a note saved with the results, e.g. what changed")

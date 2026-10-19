@@ -31,7 +31,7 @@ from evals.scoring import GROUND_TRUTH_DIR, load_scenario
 PROVIDER = os.environ.get("DEMO_PROVIDER", "huggingface")
 DAILY_LIMIT = int(os.environ.get("DEMO_DAILY_LIMIT", "50"))
 PER_VISITOR_PER_HOUR = int(os.environ.get("DEMO_PER_VISITOR_PER_HOUR", "3"))
-investigator.MAX_STEPS = int(os.environ.get("DEMO_MAX_STEPS", "10"))
+investigator.MAX_STEPS = int(os.environ.get("DEMO_MAX_STEPS", "15"))
 REPO_URL = os.environ.get("DEMO_REPO_URL", "")
 
 EXAMPLES = [q for sid in ("INC-001", "INC-002", "BENIGN-001") for q in load_scenario(sid)["example_questions"]]
@@ -125,6 +125,8 @@ def run(question: str, request: gr.Request):
         yield "\n".join(log), f"**The investigation failed:** {result['error']}", ""
         return
     trace = result["trace"]
+    if (trace.answer or "").startswith("No model available") and "429" in trace.answer:
+        trace.answer = "**The free model quota for today is used up.** Please try again tomorrow."
     footer = (f"\n\n---\n_{trace.steps} steps · {len(trace.tool_calls)} tool calls · {trace.duration_s}s · "
               f"model: {', '.join(trace.models_used) or 'none'} · investigation {trace.id}_")
     yield "\n".join(log), (trace.answer or "_No answer._") + footer, _proposals(trace.id)

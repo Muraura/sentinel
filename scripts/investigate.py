@@ -5,7 +5,7 @@ Usage:
   .venv/bin/python scripts/investigate.py --effort high "Why did camera CAM-A-SERVERROOM-01 go offline?"
   .venv/bin/python scripts/investigate.py --provider ollama "Was there suspicious access to Building A last night?"
 
---provider auto (default): Claude first, Ollama if Claude is unavailable. claude / ollama / huggingface: only that one.
+--provider auto (default): Claude first, Ollama if Claude is unavailable. claude / ollama / huggingface / gemini: only that one.
 """
 import argparse
 import logging

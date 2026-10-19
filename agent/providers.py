@@ -13,12 +13,15 @@ The loop stores the conversation in a neutral shape, and each provider translate
 """
 import json
 import os
+import time
 import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import anthropic
+import httpx
 import ollama
 from dotenv import dotenv_values
 
@@ -35,6 +38,7 @@ class ToolRequest:
     id: str
     name: str
     input: dict[str, Any]
+    extra: dict[str, Any] = field(default_factory=dict)  # sent back unchanged next turn (Gemini thought signatures)
 
 
 @dataclass
@@ -231,6 +235,15 @@ class OllamaProvider:
         return messages
 
 
+def _plain(value: Any) -> Any:
+    """Response objects (SimpleNamespace) back to plain JSON values, so they can be sent again."""
+    if isinstance(value, SimpleNamespace):
+        return {k: _plain(v) for k, v in vars(value).items()}
+    if isinstance(value, list):
+        return [_plain(v) for v in value]
+    return value
+
+
 def _as_dict(arguments: Any) -> dict:
     if isinstance(arguments, str):  # some models return arguments as a JSON string
         return json.loads(arguments)
@@ -248,6 +261,7 @@ class HuggingFaceProvider:
     Uses the OpenAI-style chat format: tool calls carry ids, and each result goes back as a "tool" message.
     """
     name = "huggingface"
+    label = "Hugging Face"
 
     def __init__(self, model: str | None = None, token: str | None = None, provider: str | None = None, client=None):
         env = _env()
@@ -282,12 +296,13 @@ class HuggingFaceProvider:
             if code in (400, 422):  # a malformed request is our bug: don't hide it
                 raise
             reason = "out of credits" if code == 402 else f"{type(e).__name__}: {e}"
-            raise ProviderUnavailable(f"Hugging Face ({self.model}): {reason}") from e
+            raise ProviderUnavailable(f"{self.label} ({self.model}): {reason}") from e
 
         choice = response.choices[0]
         message = choice.message
         calls = [ToolRequest(id=c.id or f"hf-{uuid.uuid4().hex[:8]}", name=c.function.name,
-                             input=_as_dict(c.function.arguments)) for c in message.tool_calls or []]
+                             input=_as_dict(c.function.arguments), extra=_plain(getattr(c, "extra_content", None)) or {})
+                 for c in message.tool_calls or []]
         usage = response.usage
         return ModelTurn(
             provider=self.name, model=self.model,
@@ -307,7 +322,8 @@ class HuggingFaceProvider:
                 message = {"role": "assistant", "content": turn.text or ""}
                 if turn.tool_calls:
                     message["tool_calls"] = [{"id": c.id, "type": "function",
-                                              "function": {"name": c.name, "arguments": json.dumps(c.input)}}
+                                              "function": {"name": c.name, "arguments": json.dumps(c.input)},
+                                              **({"extra_content": c.extra} if c.extra else {})}
                                              for c in turn.tool_calls]
                 messages.append(message)
             else:  # one "tool" message per result, matched to its call by tool_call_id
@@ -317,7 +333,59 @@ class HuggingFaceProvider:
         return messages
 
 
-PROVIDER_CHOICES = ("auto", "claude", "ollama", "huggingface")
+class GeminiProvider(HuggingFaceProvider):
+    """Google Gemini through its OpenAI-compatible endpoint: the free tier needs no card, so the public demo uses it.
+        GEMINI_API_KEY=...              from aistudio.google.com
+        GEMINI_MODEL=gemini-flash-lite-latest   (free tier: each model has its own daily request quota)
+    Same OpenAI-style format as HuggingFaceProvider, so only the client differs: a small HTTP one that shows
+    Google's error messages and retries when the free tier is briefly overloaded (429/503).
+    """
+    name = "gemini"
+    label = "Gemini"
+
+    def __init__(self, model: str | None = None, token: str | None = None, client=None):
+        env = _env()
+        super().__init__(model=model or env.get("GEMINI_MODEL") or "gemini-flash-lite-latest",
+                         token=token or env.get("GEMINI_API_KEY"), client=client)
+
+    @property
+    def client(self):
+        if self._client is None:
+            if not self.token:
+                raise ProviderUnavailable("No Gemini key: set GEMINI_API_KEY")
+            self._client = _OpenAICompatibleClient(
+                "https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", self.token)
+        return self._client
+
+
+class _Fields(SimpleNamespace):
+    """A JSON object with attribute access; fields the endpoint left out read as None (e.g. tool_calls)."""
+
+    def __getattr__(self, name):
+        return None
+
+
+class _OpenAICompatibleClient:
+    """Just enough of InferenceClient.chat_completion for an OpenAI-compatible endpoint."""
+
+    def __init__(self, url: str, key: str, retries: int = 3):
+        self.url, self.key, self.retries = url, key, retries
+
+    def chat_completion(self, **payload):
+        for attempt in range(self.retries + 1):
+            response = httpx.post(self.url, json=payload, timeout=180, headers={"Authorization": f"Bearer {self.key}"})
+            if response.status_code in (429, 503) and attempt < self.retries:
+                time.sleep(2 * 2 ** attempt)  # 2s, 4s, 8s
+                continue
+            if response.status_code >= 400:
+                body = response.json() if response.content else {}
+                body = body[0] if isinstance(body, list) and body else body
+                message = (body.get("error") or {}).get("message", response.text[:300]) if isinstance(body, dict) else response.text[:300]
+                raise httpx.HTTPStatusError(f"{response.status_code}: {message}", request=response.request, response=response)
+            return json.loads(response.text, object_hook=lambda d: _Fields(**d))
+
+
+PROVIDER_CHOICES = ("auto", "claude", "ollama", "huggingface", "gemini")
 
 
 def build_providers(choice: str, effort: str = "medium") -> list:
@@ -327,4 +395,5 @@ def build_providers(choice: str, effort: str = "medium") -> list:
         "claude": lambda: [AnthropicProvider(effort=effort)],
         "ollama": lambda: [OllamaProvider()],
         "huggingface": lambda: [HuggingFaceProvider()],
+        "gemini": lambda: [GeminiProvider()],
     }[choice]()

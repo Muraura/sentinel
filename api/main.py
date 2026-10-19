@@ -83,7 +83,7 @@ def require(role: Role):
 class InvestigationRequest(BaseModel):
     question: str = Field(min_length=3, max_length=1000,
                           examples=["Investigate the authentication failures around 02:00."])
-    provider: Literal["auto", "claude", "ollama", "huggingface"] = Field(
+    provider: Literal["auto", "claude", "ollama", "huggingface", "gemini"] = Field(
         "auto", description="auto = Claude first, Ollama if Claude is unavailable")
     effort: Literal["low", "medium", "high", "xhigh", "max"] = Field("medium", description="Claude only")
     score_against: str | None = Field(None, pattern=r"^[A-Z]+-\d{3}$", examples=["INC-001"],

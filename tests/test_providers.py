@@ -160,3 +160,10 @@ def test_huggingface_without_token_is_unavailable(monkeypatch):
     monkeypatch.delenv("HF_TOKEN", raising=False)
     with pytest.raises(ProviderUnavailable, match="HF_TOKEN"):
         HuggingFaceProvider().complete("s", [], [{"role": "user", "content": "q"}])
+
+
+def test_gemini_without_key_is_unavailable(monkeypatch):
+    from agent.providers import GeminiProvider
+    monkeypatch.setattr(providers, "_env", lambda: {})
+    with pytest.raises(ProviderUnavailable, match="GEMINI_API_KEY"):
+        GeminiProvider().complete("s", [], [{"role": "user", "content": "q"}])

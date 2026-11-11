@@ -476,7 +476,10 @@ function renderReport(run) {
   }
   const summary = String(r.summary || "");
   const first = (summary.match(/^.+?[.!?](?=\s|$)/) || [summary])[0];
-  const title = short(first, 170), rest = summary.slice(first.length).trim();
+  // The first sentence is the heading; cut a very long one at a word boundary and keep the rest below it
+  const cut = first.length > 240 ? first.slice(0, first.lastIndexOf(" ", 230)) : first;
+  const title = cut === first ? first : cut + "…";
+  const rest = (cut === first ? summary.slice(first.length) : summary.slice(cut.length)).trim();
   const timeline = parseTimeline(r.timeline || []);
   // One date for every entry: say it once in the heading and show only the times
   const dates = new Set((r.timeline || []).map((t) => (String(t.time).match(/\d{4}-\d{2}-\d{2}/) || [""])[0]));
@@ -684,6 +687,7 @@ async function route() {
   try {
     if (page === "run" && id) {
       const run = await loadRun(id);
+      if (!recent.list().some((r) => r.id === id)) recent.add(id, run.question); // e.g. a shared link
       state.live = new TraceView(run);
     } else if (page === "report") await showReport(id);
     else if (page === "approvals") await renderApprovals();

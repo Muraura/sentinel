@@ -1,2 +1,1 @@
-gradio==6.30.0
 huggingface_hub==1.33.0

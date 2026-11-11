@@ -1,12 +1,16 @@
 """Step-by-step log narration of an investigation: what the loop is doing, and which concept it shows.
 
 Every line carries the investigation id, so concurrent investigations can be told apart in one log stream.
+Each moment is also emitted as a structured event (agent/events.py), so a live web page can render the run
+without parsing these lines.
 Concept notes (💡) explain the idea behind a phase the first time it happens in a run; set
 SENTINEL_EXPLAIN=0 to turn them off and keep only the operational lines.
 """
 import json
 import logging
 import os
+
+from agent.events import emit, evidence_ids
 
 log = logging.getLogger("sentinel.agent")
 
@@ -61,6 +65,10 @@ class Narrator:
         self.id = investigation_id
         self.explain = os.environ.get("SENTINEL_EXPLAIN", "1") != "0"
         self._explained: set[str] = set()
+        self._step = 0
+
+    def _emit(self, kind: str, **data) -> None:
+        emit(self.id, kind, **data)
 
     def _log(self, message: str, level: int = logging.INFO) -> None:
         log.log(level, f"[{self.id}] {message}")
@@ -78,6 +86,8 @@ class Narrator:
         self._log(f"INVESTIGATION STARTED · question: {_short(question, 200)!r}")
         self._log(f"   models in fallback order: {chain} · {tool_count} tools · step limit {max_steps}")
         self.concept("setup")
+        self._emit("started", question=question, max_steps=max_steps, tool_count=tool_count,
+                   models=[f"{p.name}:{p.model or 'not configured'}" for p in providers])
 
     def step_start(self, step: int, max_steps: int, history: list[dict], model: str) -> None:
         self._log(f"── STEP {step} of max {max_steps} " + "─" * 40)
@@ -85,11 +95,15 @@ class Narrator:
                   f"to {model} and waiting for its decision")
         if step > 1:
             self.concept("stateless")
+        self._step = step
+        self._emit("step_started", step=step, max_steps=max_steps, model=model, history_messages=len(history))
 
     def fallback(self, step: int, provider, error: str, next_provider) -> None:
         target = f"{next_provider.name}:{next_provider.model}" if next_provider else "nothing left to try"
         self._log(f"   [FALLBACK] {provider.name} unavailable ({_short(error, 160)}) → {target}", logging.WARNING)
         self.concept("fallback")
+        self._emit("fallback", step=step, provider=provider.name, error=_short(error, 160),
+                   next=f"{next_provider.name}:{next_provider.model}" if next_provider else None)
 
     def model_replied(self, step: int, turn, seconds: float) -> None:
         self._log(f"   [REASON] {turn.model} replied in {seconds:.1f}s · {turn.input_tokens:,} tokens in / "
@@ -106,11 +120,17 @@ class Narrator:
             self.concept("tool_use")
             if len(turn.tool_calls) > 1:
                 self.concept("parallel")
+        self._emit("model_replied", step=step, model=turn.model, seconds=round(seconds, 1),
+                   tokens_in=turn.input_tokens, tokens_out=turn.output_tokens, stop_reason=turn.stop_reason,
+                   thinking=_short(turn.thinking, 600) if turn.thinking else None,
+                   text=_short(turn.text, 600) if turn.text and turn.stop_reason == "tool_use" else None,
+                   tools=[c.name for c in turn.tool_calls] if turn.stop_reason == "tool_use" else [])
 
     def tool_started(self, index: int, total: int, request) -> None:
         args = ", ".join(f"{k}={v!r}" for k, v in request.input.items())
         self._log(f"   [ACT] tool {index} of {total}: {request.name}({_short(args, 250)})")
         self.concept("act")
+        self._emit("tool_started", step=self._step, index=index, total=total, name=request.name, input=request.input)
 
     def tool_finished(self, request, text: str, is_error: bool, ms: int) -> None:
         if is_error:
@@ -120,6 +140,9 @@ class Narrator:
             facts = _result_facts(text)
             self._log(f"   [OBSERVE] ✅ {request.name} returned {len(text):,} chars in {ms}ms"
                       + (f" · {facts}" if facts else ""))
+        self._emit("tool_finished", step=self._step, name=request.name, is_error=is_error, ms=ms, chars=len(text),
+                   facts=_result_facts(text) if not is_error else "", error=_short(text, 250) if is_error else None,
+                   evidence=[] if is_error else evidence_ids(text))
 
     def results_added(self, count: int, history: list[dict]) -> None:
         self._log(f"   [OBSERVE] {count} result(s) appended · history is now {len(history)} messages → next step")
@@ -133,11 +156,13 @@ class Narrator:
             self.concept("step_limit")
         elif stop_reason == "report_submitted":
             self.concept("report_submitted")
+        self._emit("stopped", step=step, stop_reason=stop_reason, why=why)
 
     def nudged(self, step: int) -> None:
         self._log(f"   [NUDGE] step {step}: plain-text answer, no report submitted → reminding the model to call "
                   f"submit_report")
         self.concept("nudge")
+        self._emit("nudged", step=step)
 
     def finished(self, trace, trace_file) -> None:
         tokens = trace.input_tokens + trace.output_tokens
@@ -145,6 +170,8 @@ class Narrator:
                   f"({sum(c.is_error for c in trace.tool_calls)} errors) · {trace.duration_s}s · {tokens:,} tokens · "
                   f"models: {', '.join(trace.models_used) or 'none'}")
         self._log(f"   trace saved: {trace_file}")
+        self._emit("finished", steps=trace.steps, tool_calls=len(trace.tool_calls), duration_s=trace.duration_s,
+                   tokens=tokens, models=trace.models_used)
         self._log("═" * 70)
 
 

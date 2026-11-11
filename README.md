@@ -1,5 +1,7 @@
 # Sentinel
 
+![Sentinel: an AI agent that investigates security incidents](showcase/screens/01-cover.png)
+
 An AI agent that investigates security and operational incidents. Ask it *"What happened around 02:00?"*: it
 decides which evidence to gather, correlates logins, badge access, device status and application logs into one
 timeline, and returns a report that separates facts from inferences, citing evidence for every claim.
@@ -65,7 +67,12 @@ docker compose up -d                      # Postgres on localhost:5433
 (cd scripts && ../.venv/bin/python ingest.py)   # or: ingest.py path/to/your/loki-export.json
 .venv/bin/python scripts/generate_security_data.py
 .venv/bin/python scripts/ingest_security.py --reset
-.venv/bin/python -m pytest tests          # 85 tests
+.venv/bin/python -m pytest tests          # 89 tests
+```
+
+**In the browser**: ask a question, watch the agent's steps live, read the report, review proposed actions
+```bash
+DEMO_PROVIDER=ollama .venv/bin/uvicorn demo.app:app --port 7860   # http://127.0.0.1:7860
 ```
 
 **Investigate from the command line**
@@ -110,11 +117,13 @@ curl -s http://127.0.0.1:8800/audit -H "X-API-Key: $APPROVER_KEY"
 ## Layout
 
 ```
-agent/        the loop, model providers (Claude, Ollama), tool registry, narration, context
+agent/        the loop, model providers (Claude, Ollama), tool registry, narration and live events, context
 tools/        read-only investigation tools, RAG (knowledge.py), propose_action, evidence-ID checks
 schemas/      LogEvent, IncidentReport + submit_report
 actions/      the executor for approved actions (not reachable by the agent)
 api/          FastAPI: investigations, approvals, audit, health
+demo/         the public demo server: the web page plus its live-event endpoints, with rate limits
+web/          the web page (plain HTML, CSS, JavaScript; no build step)
 mcp_server/   the MCP server
 evals/        scoring against answer keys; results/ holds eval runs
 scripts/      ingestion, data generation, CLI, eval runner, MCP client demo

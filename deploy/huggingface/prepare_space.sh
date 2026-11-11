@@ -13,6 +13,7 @@ git ls-files -z -- agent actions api db demo mcp_server schemas tools \
             data/synthetic data/knowledge \
             scripts/__init__.py scripts/clean_data.py scripts/ingest.py scripts/ingest_security.py \
             scripts/generate_security_data.py scripts/generate_sample_logs.py scripts/investigate.py \
+            web \
             Dockerfile .dockerignore requirements.txt requirements-demo.txt .env.example \
   | rsync -a --from0 --files-from=- ./ "$OUT/"
 cp deploy/huggingface/README.md "$OUT/README.md"

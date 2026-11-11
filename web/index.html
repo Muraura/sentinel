@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sentinel · AI agent for security investigations</title>
+<meta name="description" content="Ask a security question and watch an AI agent investigate it step by step, with every fact citing evidence.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><path d='M8 1l7 7-7 7-7-7z' fill='%235eead4'/></svg>">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <a class="brand" href="#/"><span class="logo">◆</span> Sentinel</a>
+    <nav>
+      <a href="#/" data-nav="investigate"><span class="ni">●</span>Investigate</a>
+      <a href="#/report" data-nav="report"><span class="ni">■</span>Report</a>
+      <a href="#/approvals" data-nav="approvals"><span class="ni">✔</span>Approvals <span class="pill" id="pending-count" hidden></span></a>
+      <a href="#/how" data-nav="how"><span class="ni">◆</span>How it works</a>
+    </nav>
+    <div class="recent" id="recent"></div>
+    <div class="side-foot">
+      <div class="model" id="model-info"><span class="dot"></span> connecting…</div>
+      <a id="repo-link" class="repo" target="_blank" rel="noopener" hidden>View the code on GitHub ↗</a>
+      <button class="linkish" id="key-button">Approver sign-in</button>
+    </div>
+  </aside>
+  <main id="view"></main>
+</div>
+
+<dialog id="key-dialog">
+  <form method="dialog">
+    <h3>Sign in with an API key</h3>
+    <p class="muted">Approving actions needs a key with the <b>approver</b> role (<code class="plain">SENTINEL_API_USERS</code>).
+      The key is kept in this tab only. The public demo has no approver keys, so its proposals stay pending: no model can execute anything.</p>
+    <input id="key-input" type="password" placeholder="X-API-Key" autocomplete="off">
+    <div class="dialog-actions">
+      <button value="cancel" class="btn ghost">Cancel</button>
+      <button value="save" class="btn ok" id="key-save">Sign in</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>

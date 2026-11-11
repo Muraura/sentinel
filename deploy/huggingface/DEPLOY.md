@@ -1,6 +1,6 @@
 # Deploying the Sentinel demo to a Hugging Face Space
 
-The Space runs the Gradio page and Sentinel's API in one Docker container. The model is an open model served by
+The Space runs the web page (`web/`) and Sentinel's API in one Docker container. The model is an open model served by
 Hugging Face Inference Providers; the database is a hosted Postgres. **Only synthetic data is deployed.**
 
 ## 1. Database (one time)

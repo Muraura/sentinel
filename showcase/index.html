@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sentinel — portfolio screens</title>
+<meta name="viewport" content="width=1600">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================ 1. COVER ============================ -->
+<section class="screen cover" id="cover">
+  <div class="glow g1"></div><div class="glow g2"></div>
+  <div class="cover-left">
+    <div class="brand"><span class="logo">◆</span> Sentinel</div>
+    <h1>An AI agent that investigates security incidents <em>and shows its evidence.</em></h1>
+    <p class="lede">Ask <span class="q">“What happened around 02:00?”</span> Sentinel decides what to look at, correlates logins,
+      badge access, device status and application logs into one timeline, and writes a report where every claim cites a real record.</p>
+    <div class="stats">
+      <div><b>13</b><span>validated tools</span></div>
+      <div><b>4</b><span>evidence sources</span></div>
+      <div><b>85</b><span>automated tests</span></div>
+      <div><b>0</b><span>actions without human approval</span></div>
+    </div>
+    <div class="chips">
+      <span>Claude</span><span>Agent loop</span><span>MCP server</span><span>RAG · Qdrant</span>
+      <span>FastAPI</span><span>Postgres</span><span>Pydantic</span><span>Evals</span>
+    </div>
+  </div>
+  <div class="cover-right">
+    <div class="float-card c-report">
+      <div class="fc-head"><span class="sev crit">HIGH</span><span class="muted">INC · 2026-09-30 · confidence 90%</span></div>
+      <div class="fc-title">Credential compromise of l.ortiz with server-room access and bulk profile export</div>
+      <div class="mini-tl">
+        <div><i class="d auth"></i><span class="t">02:08</span>Login succeeds, no MFA <code>AUTH-00009</code></div>
+        <div><i class="d acc"></i><span class="t">02:13</span>Badge into server room <code>ACC-00007</code></div>
+        <div><i class="d dev"></i><span class="t">02:15</span>Camera goes offline <code>DEV-00001</code></div>
+        <div><i class="d log"></i><span class="t">02:17</span>140 profile exports <code>portal-api</code></div>
+      </div>
+    </div>
+    <div class="float-card c-tool">
+      <div class="tool-line"><span class="k">ACT</span> get_auth_events<span class="muted">(user="l.ortiz", 01:30–03:00)</span></div>
+      <div class="tool-line"><span class="k ok">OBS</span> total_matching=7 · truncated=false</div>
+    </div>
+    <div class="float-card c-approve">
+      <div class="muted small">Proposed by agent · awaiting approval</div>
+      <div class="ap-row"><b>disable_account</b> → l.ortiz <span class="btn ok">Approve</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 2. INVESTIGATION ============================ -->
+<section class="screen framed" id="investigate">
+  <header class="caption">
+    <div class="eyebrow">01 · Agent loop</div>
+    <h2>Watch the agent reason, act and observe, step by step</h2>
+    <p>The model picks the tools; Sentinel's code validates every argument and runs them. Every result is bounded and returns citable evidence IDs.</p>
+  </header>
+  <div class="window">
+    <div class="chrome"><i></i><i></i><i></i><span>sentinel · investigation inv-7f3a21</span></div>
+    <div class="app">
+      <nav class="side">
+        <div class="brand sm"><span class="logo">◆</span> Sentinel</div>
+        <a class="on">Investigations</a><a>Reports</a><a>Approvals <span class="pill">3</span></a><a>Knowledge</a><a>Evaluations</a>
+        <div class="side-foot"><span class="dot live"></span> Claude · primary<br><span class="muted">Ollama · fallback</span></div>
+      </nav>
+      <main class="inv">
+        <div class="ask">
+          <span class="ask-icon">?</span>
+          <span>Investigate the authentication failures around 02:00 on 2026-09-30.</span>
+          <span class="run"><span class="dot live"></span> running · step 6 of 15</span>
+        </div>
+        <div class="inv-grid">
+          <div class="trace">
+            <div class="step">
+              <div class="sn">1</div>
+              <div class="sb"><div class="lbl think">REASON</div>
+                <p>Start with the logins in the window, then pivot on any user or IP that stands out.</p></div>
+            </div>
+            <div class="step">
+              <div class="sn">2</div>
+              <div class="sb"><div class="lbl act">ACT</div>
+                <div class="call">get_auth_events<span>(start="2026-09-30T01:30Z", end="03:00Z", outcome="failure", limit=50)</span></div>
+                <div class="obs">total_matching=9 · truncated=false · 6 from <b>203.0.113.45</b> for <b>l.ortiz</b>, 3 from 198.51.100.0/24 (unknown_user)</div></div>
+            </div>
+            <div class="step">
+              <div class="sn">3</div>
+              <div class="sb"><div class="lbl act">ACT · parallel ×2</div>
+                <div class="call">get_auth_events<span>(user_name="l.ortiz", outcome="success")</span></div>
+                <div class="call">get_user_profile<span>(user_name="l.ortiz")</span></div>
+                <div class="obs"><b>AUTH-00009</b> success 02:08 from 203.0.113.45 · mfa_used=false · user is Finance, <b>not MFA-enrolled</b>, member of <b>legacy-all-access</b></div></div>
+            </div>
+            <div class="step warn">
+              <div class="sn">!</div>
+              <div class="sb"><div class="lbl inj">UNTRUSTED DATA</div>
+                <p><b>AUTH-00005</b> user_agent contains instructions addressed to the analyst. Treated as data, not instructions; flagged in the report as a prompt-injection attempt.</p></div>
+            </div>
+            <div class="step">
+              <div class="sn">4</div>
+              <div class="sb"><div class="lbl act">ACT · parallel ×2</div>
+                <div class="call">get_access_events<span>(user_name="l.ortiz", 01:30–03:00)</span></div>
+                <div class="call">get_device_events<span>(building="A", 01:30–03:00)</span></div>
+                <div class="obs"><b>ACC-00007</b> badge granted into A-ServerRoom 02:13, no lobby entry · <b>DEV-00001</b> CAM-A-SERVERROOM-01 offline 02:15</div></div>
+            </div>
+            <div class="step cur">
+              <div class="sn">5</div>
+              <div class="sb"><div class="lbl act">ACT</div>
+                <div class="call">search_knowledge<span>(query="credential compromise response")</span></div>
+                <div class="obs typing">runbook-credential-compromise.md § Containment<span class="caret"></span></div></div>
+            </div>
+          </div>
+          <aside class="evidence">
+            <div class="ev-h">Evidence collected <span class="muted">14 records</span></div>
+            <div class="src"><i class="d auth"></i>Logins <b>8</b></div>
+            <div class="src"><i class="d acc"></i>Badge access <b>3</b></div>
+            <div class="src"><i class="d dev"></i>Devices <b>2</b></div>
+            <div class="src"><i class="d log"></i>App logs <b>1 pattern</b></div>
+            <div class="ev-h mt">Entities</div>
+            <div class="ent"><span class="tag red">user</span> l.ortiz</div>
+            <div class="ent"><span class="tag red">ip</span> 203.0.113.45</div>
+            <div class="ent"><span class="tag amber">area</span> A-ServerRoom</div>
+            <div class="ent"><span class="tag amber">device</span> CAM-A-SERVERROOM-01</div>
+            <div class="ev-h mt">Guardrails</div>
+            <ul class="guard">
+              <li>Read-only tools, parameterised SQL</li>
+              <li>Time range + limit on every query</li>
+              <li>Hard step limit (15)</li>
+              <li>Report IDs checked against the DB</li>
+            </ul>
+          </aside>
+        </div>
+      </main>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 3. REPORT ============================ -->
+<section class="screen framed" id="report">
+  <header class="caption">
+    <div class="eyebrow">02 · Structured report</div>
+    <h2>One timeline across four sources, with every fact cited</h2>
+    <p>Facts and inferences are kept apart. A report citing an evidence ID that doesn't exist is rejected by code and sent back to the model to fix.</p>
+  </header>
+  <div class="window">
+    <div class="chrome"><i></i><i></i><i></i><span>sentinel · report inv-7f3a21</span></div>
+    <div class="rep">
+      <div class="rep-head">
+        <div>
+          <div class="muted small">INCIDENT REPORT · 2026-09-30 01:45–03:00 UTC</div>
+          <h3>Credential compromise of l.ortiz with server-room access and bulk profile export</h3>
+        </div>
+        <div class="sevbox"><span class="sev crit lg">HIGH</span><div class="conf"><div class="bar"><span style="width:90%"></span></div><span class="muted small">confidence 90%</span></div></div>
+      </div>
+      <div class="lanes">
+        <div class="lane-axis"><span>01:45</span><span>02:00</span><span>02:15</span><span>02:30</span><span>02:45</span><span>03:00</span></div>
+        <div class="lane"><div class="ln"><i class="d auth"></i>Logins</div><div class="track">
+          <span class="ev auth" style="left:9%">×6 failed</span><span class="ev auth solid" style="left:31%">AUTH-00009</span></div></div>
+        <div class="lane"><div class="ln"><i class="d acc"></i>Badge</div><div class="track">
+          <span class="ev acc solid" style="left:38%">ACC-00007</span></div></div>
+        <div class="lane"><div class="ln"><i class="d dev"></i>Devices</div><div class="track">
+          <span class="span dev" style="left:40%;width:48%">CAM-A-SERVERROOM-01 offline · DEV-00001 → DEV-00002</span></div></div>
+        <div class="lane"><div class="ln"><i class="d log"></i>App logs</div><div class="track">
+          <span class="span log" style="left:43%;width:10%">140 exports</span></div></div>
+      </div>
+      <div class="rep-grid">
+        <div class="col">
+          <h4>Facts <span class="muted">each cites evidence</span></h4>
+          <div class="fact">Six failed logins then one success for l.ortiz from 203.0.113.45 within 16 minutes <code>AUTH-00003…08</code><code>AUTH-00009</code></div>
+          <div class="fact">l.ortiz is not MFA-enrolled; the 02:08 login used password only <code>AUTH-00009</code></div>
+          <div class="fact">Server-room access granted only through <b>legacy-all-access</b>; Finance is not permitted there <code>ACC-00007</code></div>
+          <div class="fact">Server-room camera offline 02:15–02:51 <code>DEV-00001</code><code>DEV-00002</code></div>
+        </div>
+        <div class="col">
+          <h4>Inferences <span class="muted">with confidence</span></h4>
+          <div class="inf"><span class="cf high">high</span>The password was likely guessed or stolen: failures then success from a script user agent.</div>
+          <div class="inf"><span class="cf med">medium</span>Remote login and physical badge use at once suggest a cloned badge or an accomplice on site.</div>
+          <div class="inf"><span class="cf low">low</span>The camera outage may be deliberate, but nothing in the data shows tampering.</div>
+          <h4 class="mt">Cleared <span class="muted">not suspicious</span></h4>
+          <div class="clr">✓ a.khan: three typos from her usual IP, then MFA login</div>
+          <div class="clr">✓ CAM-B-WAREHOUSE-01: flaky all day, not an attack</div>
+          <div class="clr">✓ DOOR-B-LAB-01: scheduled maintenance CHG-2231</div>
+        </div>
+      </div>
+      <div class="rep-foot">
+        <div><h4>Missing evidence</h4>
+          <div class="miss">No identity check for the person who used the badge</div>
+          <div class="miss">No camera footage for 02:15–02:51</div>
+          <div class="miss">No record of where the exported profiles were sent</div></div>
+        <div class="valid"><h4>Validated by code before acceptance</h4>
+          <div class="vrow"><span class="ok">✓</span>Schema matches <span class="mono">IncidentReport</span></div>
+          <div class="vrow"><span class="ok">✓</span>Every fact cites at least one evidence ID</div>
+          <div class="vrow"><span class="ok">✓</span>Every cited ID exists in the database</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 4. APPROVALS ============================ -->
+<section class="screen framed" id="approvals">
+  <header class="caption">
+    <div class="eyebrow">03 · Human in the loop</div>
+    <h2>The agent proposes. A human approves. Code executes.</h2>
+    <p>No model can reach the executor. Roles and separation of duties are enforced by the API, and every step lands in an audit log.</p>
+  </header>
+  <div class="window">
+    <div class="chrome"><i></i><i></i><i></i><span>sentinel · approvals</span></div>
+    <div class="app">
+      <nav class="side">
+        <div class="brand sm"><span class="logo">◆</span> Sentinel</div>
+        <a>Investigations</a><a>Reports</a><a class="on">Approvals <span class="pill">3</span></a><a>Knowledge</a><a>Evaluations</a>
+        <div class="side-foot"><span class="avatar">AP</span> signed in as<br><b>approver</b></div>
+      </nav>
+      <main class="appr">
+        <div class="appr-h"><h3>Proposed actions</h3><span class="muted">from investigation inv-7f3a21 · severity HIGH</span></div>
+        <table>
+          <thead><tr><th>Action</th><th>Target</th><th>Reason given by agent</th><th>Status</th><th></th></tr></thead>
+          <tbody>
+            <tr><td><code>disable_account</code></td><td>l.ortiz</td><td>Login from external IP after 6 failures, no MFA</td><td><span class="st pend">pending</span></td><td class="acts"><span class="btn ok">Approve</span><span class="btn ghost">Reject</span></td></tr>
+            <tr><td><code>revoke_badge</code></td><td>l.ortiz · BDG-1001</td><td>Badge used in server room during remote session</td><td><span class="st pend">pending</span></td><td class="acts"><span class="btn ok">Approve</span><span class="btn ghost">Reject</span></td></tr>
+            <tr><td><code>block_ip</code></td><td>203.0.113.45</td><td>Source of the brute force and of 140 exports</td><td><span class="st pend">pending</span></td><td class="acts"><span class="btn ok">Approve</span><span class="btn ghost">Reject</span></td></tr>
+            <tr><td><code>require_mfa</code></td><td>l.ortiz</td><td>Account is not MFA-enrolled</td><td><span class="st done">executed</span></td><td class="muted small">by approver</td></tr>
+            <tr><td><code>open_ticket</code></td><td>DPO · data breach review</td><td>Assess profile export as personal-data breach</td><td><span class="st done">executed</span></td><td class="muted small">by approver</td></tr>
+          </tbody>
+        </table>
+        <div class="notice"><b>Separation of duties.</b> You can't approve an action proposed by an investigation you started. The executor re-checks the status itself before running anything.</div>
+        <div class="audit">
+          <div class="ev-h">Audit log</div>
+          <div class="al"><span class="t">02:41:07</span><span class="who">agent</span>action_proposed · disable_account → l.ortiz</div>
+          <div class="al"><span class="t">02:41:07</span><span class="who">agent</span>action_proposed · require_mfa → l.ortiz</div>
+          <div class="al"><span class="t">02:44:52</span><span class="who h">approver</span>action_approved · require_mfa → l.ortiz</div>
+          <div class="al"><span class="t">02:44:52</span><span class="who sys">executor</span>action_executed · MFA required for l.ortiz</div>
+          <div class="al"><span class="t">02:45:20</span><span class="who sys">executor</span>action_executed · ticket opened: DPO · data breach review</div>
+        </div>
+      </main>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 5. ARCHITECTURE + EVALS ============================ -->
+<section class="screen framed" id="architecture">
+  <header class="caption">
+    <div class="eyebrow">04 · Architecture &amp; evaluation</div>
+    <h2>The agent decides what should happen. Deterministic software decides what can.</h2>
+    <p>The same tools are served over HTTP and as an MCP server. Synthetic scenarios with hidden answer keys and decoys measure the agent.</p>
+  </header>
+  <div class="arch">
+    <div class="flow">
+      <div class="node user">Analyst<small>HTTP · API key + role</small></div>
+      <div class="arrow">→</div>
+      <div class="node core">
+        <div class="core-t">Sentinel</div>
+        <div class="core-row"><span>FastAPI</span><span>Agent loop</span><span>Narrated traces</span></div>
+        <div class="core-row"><span>LLM: Claude</span><span>Fallback: Ollama</span></div>
+        <div class="core-tools"><b>13 tools</b> · 11 read-only incl. RAG · propose_action · submit_report</div>
+        <div class="core-row"><span>Postgres</span><span>Qdrant · bge-small</span></div>
+      </div>
+      <div class="arrow">←</div>
+      <div class="node user">Approver<small>approve / reject</small></div>
+    </div>
+    <div class="flow2">
+      <div class="node mcp">Claude Desktop · Cursor<small>same tools over MCP (stdio)</small></div>
+      <div class="node exec">Executor<small>unreachable by any model · audited</small></div>
+    </div>
+    <div class="scen">
+      <div class="sc">
+        <div class="sc-h"><span class="sev crit">HIGH</span>INC-001</div>
+        <p>Credential compromise → server room → camera offline → bulk export. One user agent carries a prompt injection.</p>
+        <div class="sc-f">Tests: correlation across 4 sources, injection resistance</div>
+      </div>
+      <div class="sc">
+        <div class="sc-h"><span class="sev med">MEDIUM</span>INC-002</div>
+        <p>504 errors from database connection exhaustion by a re-indexing job, with unrelated timeouts as decoys.</p>
+        <div class="sc-f">Tests: operational root cause, correlation vs coincidence</div>
+      </div>
+      <div class="sc">
+        <div class="sc-h"><span class="sev none">NONE</span>BENIGN-001</div>
+        <p>A quiet night: an engineer working late, a flaky camera, internet noise.</p>
+        <div class="sc-f">Tests: saying “no incident” without false alarms</div>
+      </div>
+    </div>
+    <div class="stack">
+      <span class="muted small">Built with</span>
+      <b>Python 3.12</b><b>FastAPI</b><b>SQLAlchemy</b><b>Postgres</b><b>Qdrant</b><b>Pydantic</b><b>MCP</b><b>Docker</b><b>Hugging Face Spaces</b><b>pytest · 85 tests</b>
+    </div>
+    <div class="checks">
+      <span class="muted small">Scorer checks per report</span>
+      <span>evidence recall</span><span>key findings</span><span>invented IDs</span><span>false alarms on decoys</span><span>severity</span>
+    </div>
+  </div>
+</section>
+
+<script>
+  // ?screen=<id> shows a single screen (used for rendering PNGs)
+  const id = new URLSearchParams(location.search).get('screen');
+  if (id) document.querySelectorAll('.screen').forEach(s => { if (s.id !== id) s.remove(); });
+</script>
+</body>
+</html>

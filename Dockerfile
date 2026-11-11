@@ -1,4 +1,4 @@
-# Sentinel public demo (Hugging Face Docker Space). Serves the Gradio page and the API on port 7860.
+# Sentinel public demo (Hugging Face Docker Space). Serves the web page (web/) and the API on port 7860.
 FROM python:3.12-slim
 
 ENV PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1 \

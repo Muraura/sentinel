@@ -36,7 +36,7 @@ from evals.scoring import load_scenario
 PROVIDER = os.environ.get("DEMO_PROVIDER", "huggingface")
 DAILY_LIMIT = int(os.environ.get("DEMO_DAILY_LIMIT", "50"))
 PER_VISITOR_PER_HOUR = int(os.environ.get("DEMO_PER_VISITOR_PER_HOUR", "3"))
-investigator.MAX_STEPS = int(os.environ.get("DEMO_MAX_STEPS", "15"))
+investigator.MAX_STEPS = int(os.environ.get("DEMO_MAX_STEPS", "20"))
 REPO_URL = os.environ.get("DEMO_REPO_URL", "")
 WEB_DIR = Path(__file__).resolve().parent.parent / "web"
 

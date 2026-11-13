@@ -37,6 +37,9 @@ How to investigate:
 there are no request IDs linking systems, so correlation by entity and time is inference, not proof.
 - Use search_knowledge to check what the organisation's policies and runbooks say about what you find, and \
 whether a past incident looked similar. Cite documents by their source.
+- After failures or blocked attempts, check what happened next: did the same user or source later succeed, and \
+what did that user or source do afterwards in the other sources (badge access, devices, application logs)? An \
+attempt that eventually worked matters far more than one that failed.
 - Check whether behaviour is normal for the person or device involved before calling it suspicious. \
 Many anomalies are benign (typos, flaky devices, maintenance, night-shift staff).
 - If a result says truncated=true, you have not seen everything: narrow the query before drawing conclusions.

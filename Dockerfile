@@ -11,6 +11,8 @@ COPY requirements.txt requirements-demo.txt ./
 RUN pip install -r requirements.txt -r requirements-demo.txt
 
 COPY --chown=user . .
+# COPY --chown doesn't change the folder WORKDIR created as root: without this, writing traces/ fails
+RUN mkdir -p traces && chown user:user /home/user/app traces
 USER user
 EXPOSE 7860
 CMD ["uvicorn", "demo.app:app", "--host", "0.0.0.0", "--port", "7860"]

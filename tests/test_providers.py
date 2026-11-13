@@ -167,3 +167,25 @@ def test_gemini_without_key_is_unavailable(monkeypatch):
     monkeypatch.setattr(providers, "_env", lambda: {})
     with pytest.raises(ProviderUnavailable, match="GEMINI_API_KEY"):
         GeminiProvider().complete("s", [], [{"role": "user", "content": "q"}])
+
+
+def test_gemini_retries_temporary_errors_then_succeeds(monkeypatch):
+    from agent.providers import _OpenAICompatibleClient
+    replies = iter([providers.httpx.ConnectError("dropped"), NS(status_code=503, text="", content=b""),
+                    NS(status_code=200, text='{"ok": true}', content=b"x")])
+
+    def post(*_, **__):
+        reply = next(replies)
+        if isinstance(reply, Exception):
+            raise reply
+        return reply
+    monkeypatch.setattr(providers.httpx, "post", post)
+    monkeypatch.setattr(providers.time, "sleep", lambda _: None)
+    assert _OpenAICompatibleClient("u", "k").chat_completion(model="m").ok is True
+
+
+def test_gemini_chain_has_a_backup_model(monkeypatch):
+    monkeypatch.setattr(providers, "_env", lambda: {"GEMINI_API_KEY": "k", "GEMINI_MODEL": "a"})
+    assert [p.model for p in providers.build_providers("gemini")] == ["a", "gemini-3.5-flash"]
+    monkeypatch.setattr(providers, "_env", lambda: {"GEMINI_API_KEY": "k", "GEMINI_MODEL": "a", "GEMINI_FALLBACK_MODEL": "none"})
+    assert [p.model for p in providers.build_providers("gemini")] == ["a"]

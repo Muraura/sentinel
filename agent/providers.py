@@ -337,6 +337,7 @@ class GeminiProvider(HuggingFaceProvider):
     """Google Gemini through its OpenAI-compatible endpoint: the free tier needs no card, so the public demo uses it.
         GEMINI_API_KEY=...              from aistudio.google.com
         GEMINI_MODEL=gemini-flash-lite-latest   (free tier: each model has its own daily request quota)
+        GEMINI_FALLBACK_MODEL=gemini-3.5-flash   used when the first is overloaded or out of quota; "none" = off
     Same OpenAI-style format as HuggingFaceProvider, so only the client differs: a small HTTP one that shows
     Google's error messages and retries when the free tier is briefly overloaded (429/503).
     """
@@ -368,14 +369,24 @@ class _Fields(SimpleNamespace):
 class _OpenAICompatibleClient:
     """Just enough of InferenceClient.chat_completion for an OpenAI-compatible endpoint."""
 
-    def __init__(self, url: str, key: str, retries: int = 3):
-        self.url, self.key, self.retries = url, key, retries
+    RETRY_STATUS = (429, 500, 502, 503, 504)  # rate limits and temporary server trouble
+
+    def __init__(self, url: str, key: str, retries: int = 4, wait: float = 2.0):
+        self.url, self.key, self.retries, self.wait = url, key, retries, wait
 
     def chat_completion(self, **payload):
         for attempt in range(self.retries + 1):
-            response = httpx.post(self.url, json=payload, timeout=180, headers={"Authorization": f"Bearer {self.key}"})
-            if response.status_code in (429, 503) and attempt < self.retries:
-                time.sleep(2 * 2 ** attempt)  # 2s, 4s, 8s
+            delay = self.wait * 2 ** attempt  # 2s, 4s, 8s, 16s: about 30s before giving up
+            try:
+                response = httpx.post(self.url, json=payload, timeout=60,
+                                      headers={"Authorization": f"Bearer {self.key}"})
+            except httpx.TransportError:  # dropped connection, DNS hiccup, timeout
+                if attempt < self.retries:
+                    time.sleep(delay)
+                    continue
+                raise
+            if response.status_code in self.RETRY_STATUS and attempt < self.retries:
+                time.sleep(delay)
                 continue
             if response.status_code >= 400:
                 body = response.json() if response.content else {}
@@ -383,6 +394,14 @@ class _OpenAICompatibleClient:
                 message = (body.get("error") or {}).get("message", response.text[:300]) if isinstance(body, dict) else response.text[:300]
                 raise httpx.HTTPStatusError(f"{response.status_code}: {message}", request=response.request, response=response)
             return json.loads(response.text, object_hook=lambda d: _Fields(**d))
+
+
+def _gemini_chain() -> list:
+    """The configured Gemini model, then a second one: each has its own capacity and free quota, so one being
+    overloaded (503) or out of requests for the day (429) doesn't end the investigation."""
+    first = GeminiProvider()
+    backup = (_env().get("GEMINI_FALLBACK_MODEL") or "gemini-3.5-flash").strip()
+    return [first] if backup.lower() == "none" or backup == first.model else [first, GeminiProvider(model=backup)]
 
 
 PROVIDER_CHOICES = ("auto", "claude", "ollama", "huggingface", "gemini")
@@ -395,5 +414,5 @@ def build_providers(choice: str, effort: str = "medium") -> list:
         "claude": lambda: [AnthropicProvider(effort=effort)],
         "ollama": lambda: [OllamaProvider()],
         "huggingface": lambda: [HuggingFaceProvider()],
-        "gemini": lambda: [GeminiProvider()],
+        "gemini": lambda: _gemini_chain(),
     }[choice]()
